@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angebot am Schiller - Wahltabelle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .info-box {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        .info-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .task-fields {
+            margin-top: 20px;
+        }
+        
+        .field {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            color: white;
+            border-radius: 3px;
+        }
+        
+        .field-1 {
+            background-color: #8B4513; /* sprachlich-literarisch-künstlerisch */
+        }
+        
+        .field-2 {
+            background-color: #006400; /* gesellschaftswissenschaftlich */
+        }
+        
+        .field-3 {
+            background-color: #00008B; /* mathematisch-naturwissenschaftlich */
+        }
+        
+        .field-none {
+            background-color: #8B0000; /* ohne Aufgabenfeld */
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        input[type="text"], input[type="number"] {
+            width: 90%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        input[type="number"] {
+            width: 50px;
+        }
+        
+        input[type="checkbox"] {
+            transform: scale(1.3);
+        }
+        
+        .checkbox-cell {
+            text-align: center;
+        }
+        
+        .fixed-value {
+            font-weight: bold;
+        }
+        
+        .aufgabenfeld {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .af1 {
+            background-color: #8B4513;
+        }
+        
+        .af2 {
+            background-color: #006400;
+        }
+        
+        .af3 {
+            background-color: #00008B;
+        }
+        
+        .af-none {
+            background-color: #8B0000;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        button.reset {
+            background-color: #f44336;
+        }
+        
+        button.reset:hover {
+            background-color: #d32f2f;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .total-row {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        
+        .warning {
+            color: #ff0000;
+        }
+        
+        .validation-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        @media print {
+            .buttons, .status, .info-box {
+                display: none;
+            }
+            
+            body {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Angebot am Schiller - Wahltabelle</h1>
+    
+    <div class="info-box">
+        <div class="info-title">Jetzt schon bedenken für die Qualifikationsphase:</div>
+        <ul>
+            <li>Keine Neuzuwahl von möglichen Abiturfächern nach 11/EF möglich</li>
+            <li>Ein LK muss sein: D, M, fFS, reine NW</li>
+            <li>Die 4 Abiturfächer müssen die 3 Aufgabenfelder abdecken (MU und KU decken das AF 1 nicht ab)</li>
+            <li>Unter den Abiturfächern sind zwei der Fächer D, M, FS</li>
+        </ul>
+        
+        <div class="task-fields">
+            <div class="info-title">Aufgabenfelder:</div>
+            <div class="field field-1">Aufgabenfeld I: sprachlich-literarisch-künstlerisch</div>
+            <div class="field field-2">Aufgabenfeld II: gesellschaftswissenschaftlich</div>
+            <div class="field field-3">Aufgabenfeld III: mathematisch-naturwissenschaftlich</div>
+            <div class="field field-none">ohne Aufgabenfeld</div>
+        </div>
+    </div>
+    
+    <table id="wahlTabelle">
+        <thead>
+            <tr>
+                <th>Angebot am Schiller</th>
+                <th>Aufgabenfeld</th>
+                <th>Wahl</th>
+                <th>h/Wo</th>
+                <th>LK1</th>
+                <th>LK2</th>
+                <th>GK1</th>
+                <th>GK2 (mündlich)</th>
+            </tr>
+        </thead>
+        <tbody id="courseTableBody">
+            <!-- This will be filled dynamically by JavaScript -->
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3">Gesamtstunden</td>
+                <td><span id="gesamtStunden">0</span> <span id="warnung" class="warning"></span></td>
+                <td colspan="4"></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <div id="validationWarnings" class="validation-warning"></div>
+    
+    <div class="buttons">
+        <button id="saveBtn">Speichern</button>
+        <button id="loadBtn">Laden</button>
+        <button id="resetBtn" class="reset">Zurücksetzen</button>
+        <button id="printBtn">Drucken</button>
+        <button id="validateBtn">Abi-Wahl prüfen</button>
+    </div>
+    
+    <div id="statusMessage" class="status"></div>
+    
+    <script>
+        // Course data with Aufgabenfeld information
+        const courseData = [
+            {
+                id: "deutsch",
+                name: "Deutsch",
+                aufgabenfeld: "1",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af1" title="Aufgabenfeld I"></span> I',
+                value: "D",
+                fixed: true,
+                defaultHours: 3,
+                isKernfach: true
+            },
+            {
+                id: "fremdsprache1",
+                name: "Englisch, (Französisch) (ab 7 oder 9), (Spanisch) (ab 9) (Latein: siehe Nr. 12)",
+                aufgabenfeld: "1",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af1" title="Aufgabenfeld I"></span> I',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: true
+            },
+            {
+                id: "kunst",
+                name: "Kunst, Musik",
+                aufgabenfeld: "1-non",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af1" title="Aufgabenfeld I"></span> I*',
+                value: "",
+                fixed: false,
+                defaultHours: 2,
+                isKernfach: false
+            },
+            {
+                id: "gesellschaft",
+                name: "Erdkunde, (Sozialwissenschaften), Pädagogik, (Philosophie), Geschichte",
+                aufgabenfeld: "2",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af2" title="Aufgabenfeld II"></span> II',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "mathematik",
+                name: "Mathematik",
+                aufgabenfeld: "3",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af3" title="Aufgabenfeld III"></span> III',
+                value: "M",
+                fixed: true,
+                defaultHours: 3,
+                isKernfach: true
+            },
+            {
+                id: "naturwissenschaft",
+                name: "Biologie, (Physik), (Chemie)",
+                aufgabenfeld: "3",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af3" title="Aufgabenfeld III"></span> III',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "religion",
+                name: "(ER,KR) Philosophie",
+                aufgabenfeld: "2",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af2" title="Aufgabenfeld II"></span> II',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "sport",
+                name: "Sport",
+                aufgabenfeld: "none",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af-none" title="ohne Aufgabenfeld"></span> -',
+                value: "SP",
+                fixed: true,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "wahlpflicht1",
+                name: "(Englisch), (Französisch) (ab 7 oder 9), Spanisch (ab 9 oder EF), (Biologie), (Physik), (Chemie), (Informatik)",
+                aufgabenfeld: "auto",
+                aufgabenfeldDisplay: 'I / III',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "wahlpflicht2",
+                name: "beliebiges weiteres Fach aus dem Angebot der Schule",
+                aufgabenfeld: "auto",
+                aufgabenfeldDisplay: '-',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "wahlpflicht3",
+                name: "beliebiges weiteres Fach aus dem Angebot der Schule",
+                aufgabenfeld: "auto",
+                aufgabenfeldDisplay: '-',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: false
+            },
+            {
+                id: "latein",
+                name: "Latein (ab 7) oder VTF-M/D/E",
+                aufgabenfeld: "1",
+                aufgabenfeldDisplay: '<span class="aufgabenfeld af1" title="Aufgabenfeld I"></span> I',
+                value: "",
+                fixed: false,
+                defaultHours: 3,
+                isKernfach: true
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the table
+            initializeTable();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Load data from localStorage if available
+            loadSavedData();
+            
+            // Calculate initial total
+            calculateTotal();
+        });
+
+        // Initialize the table with course data
+        function initializeTable() {
+            const tableBody = document.getElementById('courseTableBody');
+            
+            courseData.forEach(course => {
+                const row = document.createElement('tr');
+                
+                // Create course name cell
+                const nameCell = document.createElement('td');
+                nameCell.textContent = course.name;
+                row.appendChild(nameCell);
+                
+                // Create Aufgabenfeld cell
+                const afCell = document.createElement('td');
+                afCell.innerHTML = course.aufgabenfeldDisplay;
+                row.appendChild(afCell);
+                
+                // Create course selection cell
+                const selectCell = document.createElement('td');
+                const selectInput = document.createElement('input');
+                selectInput.type = 'text';
+                selectInput.id = course.id;
+                selectInput.value = course.value;
+                
+                if (course.fixed) {
+                    selectInput.className = 'fixed-value';
+                    selectInput.readOnly = true;
+                }
+                
+                selectCell.appendChild(selectInput);
+                row.appendChild(selectCell);
+                
+                // Create hours cell
+                const hoursCell = document.createElement('td');
+                const hoursInput = document.createElement('input');
+                hoursInput.type = 'number';
+                hoursInput.id = course.id + 'Stunden';
+                hoursInput.min = 0;
+                hoursInput.max = 10;
+                hoursInput.step = 1;
+                hoursInput.value = course.defaultHours;
+                hoursInput.className = 'stunden';
+                hoursCell.appendChild(hoursInput);
+                row.appendChild(hoursCell);
+                
+                // Create LK1 cell
+                const lk1Cell = document.createElement('td');
+                lk1Cell.className = 'checkbox-cell';
+                const lk1Checkbox = document.createElement('input');
+                lk1Checkbox.type = 'checkbox';
+                lk1Checkbox.id = course.id + 'LK1';
+                lk1Checkbox.className = 'lk1-check';
+                lk1Checkbox.dataset.fach = course.id;
+                lk1Cell.appendChild(lk1Checkbox);
+                row.appendChild(lk1Cell);
+                
+                // Create LK2 cell
+                const lk2Cell = document.createElement('td');
+                lk2Cell.className = 'checkbox-cell';
+                const lk2Checkbox = document.createElement('input');
+                lk2Checkbox.type = 'checkbox';
+                lk2Checkbox.id = course.id + 'LK2';
+                lk2Checkbox.className = 'lk2-check';
+                lk2Checkbox.dataset.fach = course.id;
+                lk2Cell.appendChild(lk2Checkbox);
+                row.appendChild(lk2Cell);
+                
+                // Create Abitur cell
+                const gk1Cell = document.createElement('td');
+                gk1Cell.className = 'checkbox-cell';
+                const gk1Checkbox = document.createElement('input');
+                gk1Checkbox.type = 'checkbox';
+                gk1Checkbox.id = course.id + 'gk1';
+                gk1Checkbox.className = 'gk1-check';
+                gk1Checkbox.dataset.fach = course.id;
+                gk1Checkbox.dataset.kernfach = course.isKernfach;
+                gk1Checkbox.dataset.af = course.aufgabenfeld;
+                gk1Cell.appendChild(gk1Checkbox);
+                row.appendChild(gk1Cell);
+
+                // Create Abitur cell
+                const gk2Cell = document.createElement('td');
+                gk2Cell.className = 'checkbox-cell';
+                const gk2Checkbox = document.createElement('input');
+                gk2Checkbox.type = 'checkbox';
+                gk2Checkbox.id = course.id + 'gk2';
+                gk2Checkbox.className = 'gk2-check';
+                gk2Checkbox.dataset.fach = course.id;
+                gk2Checkbox.dataset.kernfach = course.isKernfach;
+                gk2Checkbox.dataset.af = course.aufgabenfeld;
+                gk2Cell.appendChild(gk2Checkbox);
+                row.appendChild(gk2Cell);
+
+
+                // Add the row to the table
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Set up event listeners for inputs and buttons
+        function setupEventListeners() {
+            // Get all input elements
+            const textInputs = document.querySelectorAll('input[type="text"]:not(.fixed-value)');
+            const stundenInputs = document.querySelectorAll('input.stunden');
+            const lk1Checks = document.querySelectorAll('.lk1-check');
+            const lk2Checks = document.querySelectorAll('.lk2-check');
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const loadBtn = document.getElementById('loadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const printBtn = document.getElementById('printBtn');
+            const validateBtn = document.getElementById('validateBtn');
+            
+            // Add event listeners to all hour inputs for automatic total calculation
+            stundenInputs.forEach(input => {
+                input.addEventListener('change', calculateTotal);
+            });
+            
+            // Set up exclusive checkboxes for LK1 and LK2
+            setupExclusiveCheckboxes(lk1Checks, 'LK1');
+            setupExclusiveCheckboxes(lk2Checks, 'LK2');
+            
+            // Add event listeners for buttons
+            saveBtn.addEventListener('click', saveData);
+            loadBtn.addEventListener('click', loadSavedData);
+            resetBtn.addEventListener('click', resetForm);
+            printBtn.addEventListener('click', printForm);
+            validateBtn.addEventListener('click', validateAbiturChoices);
+        }
+
+        // Calculate total hours
+        function calculateTotal() {
+            const stundenInputs = document.querySelectorAll('input.stunden');
+            const gesamtStunden = document.getElementById('gesamtStunden');
+            const warnung = document.getElementById('warnung');
+            
+            let total = 0;
+            stundenInputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            
+            gesamtStunden.textContent = total;
+            
+            if (total < 34) {
+                warnung.textContent = '(Mindestens 34 Stunden erforderlich!)';
+            } else {
+                warnung.textContent = '';
+            }
+            
+            return total;
+        }
+
+        // Function to ensure only one checkbox is checked per column
+        function setupExclusiveCheckboxes(checkboxes, columnName) {
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        // Uncheck all other checkboxes in the same column
+                        checkboxes.forEach(otherCheckbox => {
+                            if (otherCheckbox !== this && otherCheckbox.checked) {
+                                otherCheckbox.checked = false;
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
+        // Validate Abitur choices
+        function validateAbiturChoices() {
+            const gk1Checks = document.querySelectorAll('.gk1-check');
+            const gk2Checks = document.querySelectorAll('.gk2-check');
+            const lk1Checks = document.querySelectorAll('.lk1-check');
+            const lk2Checks = document.querySelectorAll('.lk2-check');
+            const validationWarnings = document.getElementById('validationWarnings');
+            
+            const warnings = [];
+            
+            // Count selected Abitur subjects
+            const selectedAbiSubjects = Array.from(gk1Checks).filter(check => check.checked);
+            
+            if (selectedAbiSubjects.length !== 4) {
+                warnings.push(`Es müssen genau 4 Abiturfächer gewählt werden. Aktuell: ${selectedAbiSubjects.length}`);
+            }
+            
+            // Check if LK1 and LK2 are selected
+            const selectedLK1 = Array.from(lk1Checks).find(check => check.checked);
+            const selectedLK2 = Array.from(lk2Checks).find(check => check.checked);
+            
+            if (!selectedLK1) {
+                warnings.push("LK1 muss ausgewählt werden.");
+            }
+            
+            if (!selectedLK2) {
+                warnings.push("LK2 muss ausgewählt werden.");
+            }
+            
+            // Check if a valid LK is selected (D, M, fFS, NW)
+            if (selectedLK1 || selectedLK2) {
+                const validLK1 = selectedLK1 && 
+                    (selectedLK1.id === "deutschLK1" || 
+                     selectedLK1.id === "mathematikLK1" || 
+                     selectedLK1.id === "fremdsprache1LK1" || 
+                     selectedLK1.id === "lateinLK1" || 
+                     selectedLK1.id === "naturwissenschaftLK1");
+                
+                const validLK2 = selectedLK2 && 
+                    (selectedLK2.id === "deutschLK2" || 
+                     selectedLK2.id === "mathematikLK2" || 
+                     selectedLK2.id === "fremdsprache1LK2" || 
+                     selectedLK2.id === "lateinLK2" || 
+                     selectedLK2.id === "naturwissenschaftLK2");
+                
+                if (!validLK1 && !validLK2) {
+                    warnings.push("Mindestens ein LK muss D, M, Fremdsprache oder Naturwissenschaft sein.");
+                }
+            }
+            
+            // Check if at least two of the subjects are from D, M, FS
+            const kernfachCount = selectedAbiSubjects.filter(check => 
+                check.dataset.kernfach === "true"
+            ).length;
+            
+            if (kernfachCount < 2) {
+                warnings.push("Unter den Abiturfächern müssen mindestens zwei der Fächer D, M, FS sein.");
+            }
+            
+            // Check if all three Aufgabenfelder are covered
+            // Check if all three fields are covered
+            const af1Valid = selectedAbiSubjects.some(check => check.dataset.af === "1");
+            const af2Valid = selectedAbiSubjects.some(check => check.dataset.af === "2");
+            const af3Valid = selectedAbiSubjects.some(check => check.dataset.af === "3");
+            
+            if (!(af1Valid && af2Valid && af3Valid)) {
+                warnings.push("Die 3 Aufgabenfelder müssen durch die Abiturfächer abgedeckt werden. Beachte: Kunst und Musik (AF I*) decken das Aufgabenfeld I nicht ab!");
+            }
+            
+            // Display warnings
+            if (warnings.length > 0) {
+                validationWarnings.innerHTML = "<strong>Achtung!</strong><ul>" + 
+                    warnings.map(w => `<li>${w}</li>`).join("") + 
+                    "</ul>";
+                validationWarnings.style.display = "block";
+                validationWarnings.className = "validation-warning";
+            } else {
+                validationWarnings.innerHTML = "<strong>Glückwunsch!</strong> Deine Abiturfächer erfüllen alle Anforderungen.";
+                validationWarnings.style.display = "block";
+                validationWarnings.className = "validation-warning success";
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            const textInputs = document.querySelectorAll('input[type="text"]:not(.fixed-value)');
+            const stundenInputs = document.querySelectorAll('input.stunden');
+            const lk1Checks = document.querySelectorAll('.lk1-check');
+            const lk2Checks = document.querySelectorAll('.lk2-check');
+            const gk1Checks = document.querySelectorAll('.gk1-check');
+            const gk2Checks = document.querySelectorAll('.gk2-check');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            const data = {};
+            
+            // Collect data from text inputs
+            textInputs.forEach(input => {
+                data[input.id] = input.value;
+            });
+            
+            // Collect data from hour inputs
+            stundenInputs.forEach(input => {
+                data[input.id] = input.value;
+            });
+            
+            // Collect checkbox states
+            const allCheckboxes = [...lk1Checks, ...lk2Checks, ...gk1Checks, ...gk2Checks];
+            allCheckboxes.forEach(checkbox => {
+                data[checkbox.id] = checkbox.checked;
+            });
+            
+            try {
+                localStorage.setItem('schillerWahlData', JSON.stringify(data));
+                showStatus('Daten wurden erfolgreich gespeichert!');
+            } catch (e) {
+                showStatus('Fehler beim Speichern der Daten: ' + e.message, false);
+            }
+        }
+
+        // Load data from localStorage
+        function loadSavedData() {
+            try {
+                const data = JSON.parse(localStorage.getItem('schillerWahlData'));
+                
+                if (data) {
+                    // Fill text inputs with saved data
+                    const textInputs = document.querySelectorAll('input[type="text"]:not(.fixed-value)');
+                    textInputs.forEach(input => {
+                        if (data[input.id] !== undefined) {
+                            input.value = data[input.id];
+                        }
+                    });
+                    
+                    // Fill hour inputs with saved data
+                    const stundenInputs = document.querySelectorAll('input.stunden');
+                    stundenInputs.forEach(input => {
+                        if (data[input.id] !== undefined) {
+                            input.value = data[input.id];
+                        }
+                    });
+                    
+                    // Set checkbox states
+                    const lk1Checks = document.querySelectorAll('.lk1-check');
+                    const lk2Checks = document.querySelectorAll('.lk2-check');
+                    const gk1Checks = document.querySelectorAll('.gk1-check');
+                    const gk2Checks = document.querySelectorAll('.gk2-check');
+                    const allCheckboxes = [...lk1Checks, ...lk2Checks, ...gk1Checks, ...gk2Checks];
+                    
+                    allCheckboxes.forEach(checkbox => {
+                        if (data[checkbox.id] !== undefined) {
+                            checkbox.checked = data[checkbox.id];
+                        }
+                    });
+                    
+                    // Recalculate total
+                    calculateTotal();
+                    
+                    showStatus('Daten wurden erfolgreich geladen!');
+                }
+            } catch (e) {
+                console.error('Error loading data:', e);
+            }
+        }
+
+        // Reset form to default values
+        function resetForm() {
+            if (confirm('Möchten Sie wirklich alle Einträge zurücksetzen?')) {
+                // Reset text inputs
+                const textInputs = document.querySelectorAll('input[type="text"]:not(.fixed-value)');
+                textInputs.forEach(input => {
+                    input.value = '';
+                });
+                
+                // Reset hour inputs to default values
+                courseData.forEach(course => {
+                    const hoursInput = document.getElementById(course.id + 'Stunden');
+                    if (hoursInput) {
+                        hoursInput.value = course.defaultHours;
+                    }
+                });
+                
+                // Reset checkboxes
+                const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                allCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Recalculate total
+                calculateTotal();
+                
+                // Hide validation warnings
+                document.getElementById('validationWarnings').style.display = 'none';
+                
+                showStatus('Alle Einträge wurden zurückgesetzt.');
+            }
+        }
+
+        // Print the form
+        function printForm() {
+            window.print();
+        }
+
+        // Function to show status message
+        function showStatus(message, isSuccess = true) {
+            const statusMessage = document.getElementById('statusMessage');
+            
+            statusMessage.textContent = message;
+            statusMessage.style.display = 'block';
+            
+            if (isSuccess) {
+                statusMessage.className = 'status success';
+            } else {
+                statusMessage.className = 'status error';
+            }
+            
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
