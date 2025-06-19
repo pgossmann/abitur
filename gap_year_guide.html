@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Gap Year Bericht (Markdown Ansicht)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 2rem; background-color: #f8f9fa; }
+        #content { background: white; padding: 2rem; border-radius: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">📘 Gap Year Bericht (Markdown Ansicht)</h1>
+        <div id="content">Lade Inhalt…</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        fetch('./gap_year_guide.md')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('content').innerHTML = marked.parse(text);
+            })
+            .catch(err => {
+                document.getElementById('content').innerHTML = "<p>Fehler beim Laden der Datei.</p>";
+            });
+    </script>
+</body>
+</html>
